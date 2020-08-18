@@ -19,7 +19,10 @@ class DataContext
             {
 
                 if ($lineCount > 0) {
-                        $wvm = new Wildflower_Meadow($data[0], $data[1], $data[2], getGeo($data[0]));
+                    $mapURL = "";
+                    $geo = $this->getGeo($data[0],$mapURL);
+
+                        $wvm = new Wildflower_Meadow($data[0], $data[1], $data[2], $geo, $mapURL );
                         $meadows[] = $wvm;
                     $lineCount++;
                 }
@@ -34,29 +37,16 @@ class DataContext
         return $meadows;
     }
 
-    public function getGeo($Name)
+    public function getGeo($Name, &$map)
     {
-        $geo = [];
-
+        $geo = array();
         try {
+            $Name .= ", Plymouth, UK";
             $URI = 'http://open.mapquestapi.com/geocoding/v1/address?key=hFG5vCBvXaNpsx36ApAFiRKY8bucLDQY&location='.urlencode($Name);
-            //Initialise the CURL library
-            $httpClient = curl_init($URI);
-            //Set the HTTP verb
-            curl_setopt($httpClient, CURLOPT_CUSTOMREQUEST, "GET");
-            curl_setopt($httpClient, CURLOPT_RETURNTRANSFER, true);
-
-            //Tell it the content type - or the webservice does not know what to do with it
-            curl_setopt($httpClient, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json'));
-
-            $response = curl_exec($httpClient);
-
-            //The HTTP code is important to be able to handle any errors and responses.
-            $httpCode = curl_getinfo($httpClient, CURLINFO_HTTP_CODE);
-
-
-            curl_close($httpClient);
+            $response = file_get_contents($URI);
+            $data = json_decode($response, true);
+            $geo = ["lat" => $data["results"][0]["locations"][0]["latLng"]["lat"], "lng"=> $data["results"][0]["locations"][0]["latLng"]["lng"]];
+            $map = $data["results"][0]["locations"][0]["mapUrl"];
 
         }catch(Exception $e)
         {
