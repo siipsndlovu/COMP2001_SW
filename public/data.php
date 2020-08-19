@@ -1,12 +1,14 @@
 <?php
 
 include_once 'header.php';
-include_once '../src/DataContext.php';
-include_once '../src/Wildflower_Meadow.php';
+include_once '../src/model/DataContext.php';
+include_once '../src/model/Wildflower_Meadow.php';
 
 if(!isset($db)) {
     $db = new DataContext();
 }
+
+$coords = [];
 
 ?>
 <head>
@@ -30,7 +32,10 @@ if(!isset($db)) {
 <h1>Wildflower Meadow Data</h1>
     <p>This data is displayed from the csv data set provided from the Plymouth OpenData repository
     found here.  <a href="https://plymouth.thedata.place/dataset/plymouth-wildflower-meadows">
-            https://https://plymouth.thedata.place/dataset/plymouth-wildflower-meadows</a></p>
+            https://plymouth.thedata.place/dataset/plymouth-wildflower-meadows</a></p>
+    <p>The location coordinates and the markers on the map are provided by the MapQuest Geocoding API.  The
+        request is made using the Name entered into the csv file.  Not
+    all locations returned are correct and caution should be employed.</p>
 
     <div class="container-fluid col-12">
         <div class="row">
@@ -41,6 +46,7 @@ if(!isset($db)) {
                         <th>Name</th>
                         <th>Area</th>
                         <th>Amenity Type</th>
+                        <th>Location</th>
                     </tr>
                     </thead>
                     <tbody class="border-success">
@@ -52,13 +58,18 @@ if(!isset($db)) {
                         foreach($meadows as $meadow)
                         {
                             $HTML .= "<tr>";
-                            $HTML .= "<td>".$meadow->Name()."</td>";
+                            $HTML .= "<td><a href='".$meadow->MapURL()."' target=\"_blank\">".$meadow->Name()."</a></td>";
                             $HTML .= "<td>".$meadow->Area()."</td>";
                             $HTML .= "<td>".$meadow->Amenity_Type()."</td>";
+                            $HTML .= "<td>".$meadow->Geo()["lat"].", ".$meadow->Geo()["lng"]."</td>";
                             $HTML .= "</tr>";
+
+                            $coords [] = [$meadow->Geo()["lat"], $meadow->Geo()["lng"], $meadow->Name()];
                         }
                     }
                     echo $HTML;
+
+
                 ?>
 
                     </tbody>
@@ -81,8 +92,14 @@ if(!isset($db)) {
                         accessToken:  'pk.eyJ1Ijoic2hpcmxleWF0a2luc29uIiwiYSI6ImNrZHg2NjhvMjJ5dmsyeHR2YnN3NzZ3ZjMifQ.XX8CY4KiuLA1X_-2HlhZpg'
                     }).addTo(mymap);
 
-                    var marker = L.marker([50.375406, -4.138342]).addTo(mymap).bindPopup("<b>Plymouth Uni!</b><br />Here it is.").openPopup();
+                    var coord = <?php echo json_encode($coords, JSON_PRETTY_PRINT) ?>;
 
+                    coord.forEach(createMarkers);
+
+                    function createMarkers(item)
+                    {
+                        var marker = L.marker([item[0], item[1]]).addTo(mymap).bindPopup("<b>"+item[2]+"</b>");
+                    }
                 </script>
             </div>
             </div>
