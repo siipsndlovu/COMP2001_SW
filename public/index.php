@@ -29,6 +29,14 @@ include_once 'header.php';
                 this Wildflower Finder web application is a semantic web enabled application
                 that not only presents the data in a human readable format, but also provides semantic mark up for machine-to-machine consumption.
             </p>
+            <p>
+                The data page provides a human readable interface to the data.  To access the machine readable
+                linked data markup, please call the resource <b>meadow</b> from this base URL.
+                <a href="http://web.socem.plymouth.ac.uk/Shirley/meadow/">http://web.socem.plymouth.ac.uk/Shirley/meadow/</a>
+                This will provide you with the JSON-LD markup for all Wildflower Meadows in Plymouth.
+            </p>
+            <p>PLEASE NOTE: currently the API call for the geocoding is a bit slower than I would like.  Speed of returning
+            data is not in my scope right now - but I will work on it.</p>
         </div>
     </div>
     <div class="row">

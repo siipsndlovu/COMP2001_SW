@@ -7,14 +7,17 @@ class Wildflower_Meadow
     private $area;
     private $amenityType;
     private $geo = [];
+    private $mapURL;
 
 
-    public function __construct($Name, $Area, $AmenityType, $Geo)
+    public function __construct($Name, $Area, $AmenityType, $Geo, $MapURL)
     {
         $this->name = $Name;
         $this->area = $Area;
         $this->amenityType = $AmenityType;
         $this->geo = $Geo;
+        $this->mapURL = $MapURL;
+
     }
 
     public function Name()
@@ -33,5 +36,9 @@ class Wildflower_Meadow
     public function Geo()
     {
         return $this->geo;
+    }
+    public function MapURL()
+    {
+        return $this->mapURL;
     }
 }
