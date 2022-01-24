@@ -11,7 +11,7 @@ An RDF output for the dataset is also provided [here](http://web.socem.plymouth.
 ## Third Party Libraries
 The following third party assets/libraries are in use for this application.
 
-* Bootstrap: https://getbootstrap.com/
+* Bootstrap: [https://getbootstrap.com/] (https://getbootstrap.com/)
 * Leaflet: http://leafletjs.com/
 * Mapbox: https://www.mapbox.com/
 * Plymouth DATA Place: https://plymouth.thedata.place/dataset
